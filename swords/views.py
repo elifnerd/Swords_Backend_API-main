@@ -17,4 +17,8 @@ def swords_list(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)  
 
-        
+@api_view((['GET']))
+def swords_detail(request, pk):
+    
+    print(pk)
+    return Response(pk)
