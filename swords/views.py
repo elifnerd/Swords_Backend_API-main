@@ -7,19 +7,17 @@ from .models import Sword
 
 @api_view(['GET', 'POST'])
 def swords_list(request):
-    
     if request.method == 'GET':
         swords = Sword.objects.all()
         serializer = SwordSerializer(swords, many=True)
         return Response(serializer.data)
-    
     elif request.method == 'POST':
         serializer = SwordSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)  
 
-@api_view(['GET', 'PUT'])
+@api_view(['GET', 'PUT', 'DELETE'])
 def swords_detail(request, pk):
     sword = get_object_or_404(Sword, pk=pk)
     if request.method == 'GET':
@@ -30,4 +28,6 @@ def swords_detail(request, pk):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-    
+    elif request.method == 'DELETE':
+        sword.delete()
+        return Response(status.HTTP_204_NO_CONTENT)
