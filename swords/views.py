@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
 from.serializers import SwordSerializer
 from .models import Sword
 
@@ -17,8 +18,13 @@ def swords_list(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)  
 
-@api_view((['GET']))
+@api_view(['GET'])
 def swords_detail(request, pk):
+    try:
+        sword = Sword.objects.get(pk=pk)
+        serializer = SwordSerializer(sword);
+        return Response(serializer.data)
+    except Sword.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
-    print(pk)
     return Response(pk)
